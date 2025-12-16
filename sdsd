@@ -1,0 +1,739 @@
+Design pattern -> creational -> Simple\_Factory\_and\_Factory\_Method
+
+
+
+Problem without SimpleFactory.txt
+
+
+
+Simple Factory.doc
+
+
+
+GUIApp.txt
+
+
+
+GUIApp1.txt
+
+
+
+
+
+D:\\CDAC\\Advanced java\\Day\_2\_Jakarta\_EE\\Day\_2\_Jakarta\_EE
+
+
+
+### *Servlet*
+
+
+
+###### **>>Static Content vs Dynamic Content.ppt**
+
+
+
+----- static content  - not matter what the request is , all clients will see the same response
+
+  also known as request-response model
+
+
+
+-client sends the request and server sends the response for that request
+
+-client clicks any hyperlink and server sends that file or that content
+
+
+
+----- dynamic content  - response is given based on the request
+
+                         request-response-response-model
+
+
+
+   needs some kind of programming on the server
+
+   every client get different page , hence it is called as dynamic content all the is possible due to server side technology
+
+
+
+web server cant do any programming it dumb b that why programming is needed
+
+
+
+###### ***>>Servlet infot.txt***
+
+
+
+request response model
+
+
+
+------cgi - common gateway information
+
+ek client ke request ko deal krne ke liye naya process create hota tha
+
+but in servlet it uses threads in thread pool
+
+
+
+servlet is and http packages which has a subpackage http
+
+
+
+------servlet is a parent interface from which generic servlet is derived from genericServlet , httpservlet is derived
+
+servlet interface - for giving contract
+
+
+
+----------genericservlet - to handle any request - it is abstract class
+
+to crate generic servlet
+
+public class myserv extends genericservlet
+
+{
+
+we hand to implement those methods of servlet interface which genericservlet has no implemented
+
+}
+
+
+
+**generciservlet** was designed in order to deal with any type of request like http, ftp, smtp, etc
+
+
+
+they found that http request are more so they create a child of genericservlet
+
+
+
+**servlet interface(all abstract class)**
+
+->
+
+**genericservlet**(abstract class as it has not defined some of the abstract methods of parent interface)
+
+->
+
+**httpservlet**(it has defined all those methods of servlet interface which its parent generic servlet has not defined , that means it does not have a single abstract method. but it still is an abstract method - only for http requests
+
+
+
+so we all use httpservlet no one uses generic servlet now days
+
+
+
+
+
+
+
+httpservlet - to handle only http request - all the methods inside this are lifecycle methods we have to override them to use them,
+
+
+
+**servlet lifecycle  -**
+
+
+
+we talk about lifecycle when there application inside a server
+
+lifecycle is managed by server and for this you dont need main since this is not a standalone application this is and server side application
+
+
+
+lifecyle - methods -
+
+
+
+---public void init() -- it is called only once -
+
+it can be used to
+
+-create database connection
+
+-lookup remote object or any ejb component
+
+
+
+**---service**
+
+it is called again and again - it will be called by each thread
+
+multiple request multiple threads attacks on service
+
+
+
+there are two parameters - both of these are interfaces -here vendor is server who gives implementations
+
+httpservletrequest - child of servletrequest
+
+httpservletresponse - child of servletresponse
+
+ 
+
+ all are interfaces
+
+
+
+service is called wherenver a new request comes to the servlet and then in turn it invokes either doGet() and doPost() are methods of HttpServlet class depending upon the type of request.
+
+
+
+get
+
+ 	public void doGet(HttpServletRequest,HttpServletResponse)
+
+
+
+post
+
+ 	public void doPost(HttpServletRequest,HttpServletResponse)
+
+
+
+public void destroy()
+
+ 		it is called only when
+
+ 			u shutdown the server - tomcat server
+
+ 			or
+
+ 			u undeploy the application.
+
+
+
+###### *>>Java-Enabled Web and Application Server.ppt* - see the structure
+
+
+
+
+
+when we write an application inside server there are some rules/convetions we must follow some structure as per jakartEE spec(specification) --see the file below
+
+ 
+
+###### *>>Web Application Strucure as per JavaEE Spec*
+
+
+
+now to start an application
+
+first open eclipse -> then open perpective and select javaEE
+
+if you see no servers found in the servers tab click on it
+
+and create a select deault apache folder path D:\\apache-tomcat-10.1.50
+
+select apacche version 10.1
+
+server is created
+
+now create a new dynamic web app
+
+from there select dynamic web module verion 5.0 next next and select webxml wala
+
+
+
+after creating
+
+right click on project name -> new servlet
+
+
+
+
+
+
+
+import jakarta.servlet.ServletException;
+
+import jakarta.servlet.annotation.WebServlet;
+
+import jakarta.servlet.http.HttpServlet;
+
+import jakarta.servlet.http.HttpServletRequest;
+
+import jakarta.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
+
+import java.io.PrintWriter;
+
+
+
+/\*\*
+
+ \* Servlet implementation class firstserv
+
+ \*/
+
+@WebServlet("/firstserv")
+
+public class firstserv extends HttpServlet {
+
+ 	private static final long serialVersionUID = 1L;
+
+
+
+ 	/\*\*
+
+ 	 \* @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+
+ 	 \*/
+
+ 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+ 		// TODO Auto-generated method stub
+
+ 		PrintWriter pw = response.getWriter();// printwriter is an output stream //getwriter method of servlet
+
+ 		pw.println("welcome to the first serrrrverrrr servlet"); //pw is
+
+ 	}
+
+           //or
+
+         ServletOutputStream sos = response.getOutputStream();//also used to get output
+
+ 	sos.println("welcome to the first servlet");
+
+
+
+}
+
+
+
+###### ***>>servlet execution***
+
+container is tomcat
+
+reflection api invokes no arg constructor
+
+it invokes init method we have not overridden that
+
+
+
+
+
+>>person.html and >>PersonServ.java run 
+import java.io.\\\\\\\*;
+
+---
+
+###### import jakarta.servlet.\*;
+
+###### import jakarta.servlet.http.\*;
+
+###### import jakarta.servlet.annotation.WebServlet;
+
+###### 
+
+###### @WebServlet("/PersonServ")
+
+public class PersonServ extends HttpServlet
+
+{
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+
+            throws IOException
+
+    {
+
+        response.setContentType("text/html");
+
+        PrintWriter pw = response.getWriter();
+
+
+
+        String name = request.getParameter("name");
+
+        int age = Integer.parseInt(request.getParameter("age").trim());
+
+
+
+        pw.println(name + " " + age);
+
+    }
+
+}
+
+
+
+<html>
+
+<body>
+
+<form action="PersonServ" method="post">
+
+Enter name: <input type=text name="name"/>
+
+ 	<br>
+
+Enter age: <input type=text name="age"/>
+
+ 	<br><br>
+
+<input type=submit>
+
+</form>
+
+</body>
+
+</html>
+
+
+
+
+
+now open my sql and add
+
+create table person(id int primary key auto\_increment,name varchar(30),age int);
+
+
+
+create servlet PersonServ.java
+
+
+
+
+
+import jakarta.servlet.ServletConfig;
+
+import jakarta.servlet.ServletException;
+
+import jakarta.servlet.annotation.WebServlet;
+
+import jakarta.servlet.http.HttpServlet;
+
+import jakarta.servlet.http.HttpServletRequest;
+
+import jakarta.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
+
+import java.io.PrintWriter;
+
+import java.sql.Connection;
+
+import java.sql.DriverManager;
+
+import java.sql.PreparedStatement;
+
+
+
+/\*\*
+
+ \* Servlet implementation class PersonServ
+
+ \*/
+
+@WebServlet("/PersonServ")
+
+public class PersonServ extends HttpServlet {
+
+ 	private static final long serialVersionUID = 1L;
+
+ 	Connection con = null;
+
+
+
+ 	/\*\*
+
+ 	 \* @see Servlet#init(ServletConfig)
+
+ 	 \*/
+
+ 	public void init(ServletConfig config) {
+
+ 		// TODO Auto-generated method stub
+
+ 		try
+
+ 		{
+
+ 			Class.forName("com.mysql.cj.jdbc.Driver");
+
+ 			String ss = "jdbc:mysql://localhost:3306:mydb";
+
+ 			con = DriverManager.getConnection(ss,"root","Root");
+
+ 		}
+
+ 		catch(Exception ee) {
+
+ 			ee.printStackTrace();
+
+ 		}
+
+ 	}
+
+
+
+ 	/\*\*
+
+ 	 \* @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+
+ 	 \*/
+
+ 	protected void doPost(HttpServletRequest request, HttpServletResponse response)  {
+
+ 		// TODO Auto-generated method stub
+
+ 		String name = request.getParameter("name");
+
+ 		int age = Integer.parseInt(request.getParameter("age").trim());
+
+ 		try
+
+ 		{
+
+ 			PreparedStatement pst= con.prepareStatement("insert into person(name,age) values(?,?)");
+
+ 			pst.setString(1, name);
+
+ 			pst.setInt(2, age);
+
+ 			int k = pst.executeUpdate();
+
+ 			PrintWriter pw = response.getWriter();
+
+ 			if(k>0)
+
+ 			{
+
+ 				pw.println("record added int the databse ");
+
+ 			}else {
+
+ 				pw.println("record not added ");
+
+ 			}
+
+ 
+
+ 		}
+
+ 		catch(Exception ee) {
+
+ 			ee.printStackTrace();
+
+ 		}
+
+ 	}
+
+
+
+}
+
+
+
+// you will get drivernotfound exception in standalone application
+
+solution - to set the classpath of "mysqlconnector.jar"
+
+
+
+servlet/jsp \[server side application]
+
+classpath is not a solution
+
+solution : you have to copy "mysqlconnector.jar" inside "lib" folder of your project
+
+
+
+
+
+###### ***>>JDBC\_using\_Properties folder***
+
+***>>SingletonCon.java***
+
+***>>FourthServ.java***
+
+
+
+-create new dynamic project
+
+-select dynamic web version 5
+
+-create a new package mypack and paste properties and singleton files to it(change properties file add your MySQL uname and password)
+
+-add jar file to lib
+
+* create a new servlet named firsserv
+* and write this code
+
+
+
+
+
+import jakarta.servlet.ServletConfig;
+
+import jakarta.servlet.ServletException;
+
+import jakarta.servlet.annotation.WebServlet;
+
+import jakarta.servlet.http.HttpServlet;
+
+import jakarta.servlet.http.HttpServletRequest;
+
+import jakarta.servlet.http.HttpServletResponse;
+
+import mypack.SingletonCon;
+
+
+
+import java.io.IOException;
+
+import java.io.PrintWriter;
+
+import java.sql.Connection;
+
+import java.sql.ResultSet;
+
+import java.sql.Statement;
+
+
+
+/\*\*
+
+ \* Servlet implementation class firstserv
+
+ \*/
+
+@WebServlet("/firstserv")
+
+public class firstserv extends HttpServlet {
+
+ 	private static final long serialVersionUID = 1L;
+
+ 	Connection con = null;
+
+
+
+ 	/\*\*
+
+ 	 \* @see Servlet#init(ServletConfig)
+
+ 	 \*/
+
+ 	public void init(ServletConfig config) {
+
+ 		// TODO Auto-generated method stub
+
+ 		try
+
+ 		{
+
+ 			con=SingletonCon.getCon();
+
+ 		}
+
+ 		catch(Exception ee)
+
+ 		{
+
+ 			ee.printStackTrace();
+
+ 		}
+
+ 	}
+
+
+
+ 	/\*\*
+
+ 	 \* @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+
+ 	 \*/
+
+ 	protected void doGet(HttpServletRequest request, HttpServletResponse response) {
+
+ 		// TODO Auto-generated method stub
+
+ 		try
+
+ 		{
+
+ 			response.setContentType("text/html");
+
+ 			PrintWriter pw=response.getWriter();
+
+ 		        pw.println("Using properties");
+
+ 		        pw.println("<br>");
+
+ 			Statement st=con.createStatement();
+
+ 			ResultSet rs=st.executeQuery("select \* from dept");
+
+ 			while(rs.next())
+
+ 			{
+
+ 				pw.println(rs.getInt(1));
+
+ 				pw.println(rs.getString(2));
+
+ 				pw.println(rs.getString(3));
+
+ 
+
+ 			}
+
+ 		}
+
+ 		catch(Exception ee)
+
+ 		{
+
+ 			System.out.println(ee);
+
+ 		}
+
+ 	}
+
+
+
+}
+
+
+
+
+
+ 
+
+###### ***>>Maven\_Folder folder***
+
+***-> maven folder -> Heavy Application vs Light Application.ppt***
+
+* Maven is a build automation and dependency management tool used for Java projects.
+  it will not have any jar files it will automatically download from internet
+* Maven project is configured and managed using pom.xml. it has dependencies(no of jar files) for required libraries
+
+
+
+**Central repo** which is on the internect which have jar files available which are required by almost all types of java application
+
+**Local Repo (c:\\users)** when we compile our app for the first time pom.xml will be referred for downloading the dependencies mentioned in pom.xml , it will download dependencies from central repo and store it in local repo
+
+application uses local repo
+
+
+
+there's also remote repo
+
+
+
+***Maven info D:\\CDAC\\Advanced java\\Day\_2\_Jakarta\_EE\\Day\_2\_Jakarta\_EE\\Maven\_Folder\\Maven\\Info***
+
+
+
+**how to create application(either create maven project or convert dynamice web project to maven project -> right click on project -> configure -> convert to maven )**
+
+* create dynamic web project
+* create package inside it past property and singleton
+* create servlet select init and do get method
+* get code from maven project files
+* mention dependencies in pom.xml after </build> tag inside <dependencies><dependency> </dependency></dependencies>(get them from google )
