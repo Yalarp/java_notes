@@ -51,6 +51,7 @@ Point p{3, 4};
 ```
 
 ### Containers:
+{% raw %}
 ```cpp
 vector<int> v{1, 2, 3, 4, 5};
 map<string, int> m{{"one", 1}, {"two", 2}};
